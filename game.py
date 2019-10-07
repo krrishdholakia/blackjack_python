@@ -37,6 +37,7 @@ def main():
         if game_case == 0: 
             card_deck = ["A", "2", "3", "4", "5", "6", "7", "8", "9",
             "10", "K", "J", "Q"] * 4
+            random.shuffle(card_deck)
             starter_text = "Hi! Welcome to BlackJack KPFellows Edition!!, please begin by placing your bets (as a number from 1..)! \n"
             player_bet_input = input(starter_text)
             try: 
@@ -46,8 +47,6 @@ def main():
                 
                 #get first player card
                 deal_cards(card_deck, player_cards, player_card_deck_instance)
-
-                print("player_cards are: ", player_cards, player_card_deck_instance)
 
                 #get second player card
                 deal_cards(card_deck, player_cards, player_card_deck_instance)
