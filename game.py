@@ -47,6 +47,8 @@ def main():
                 #get first player card
                 deal_cards(card_deck, player_cards, player_card_deck_instance)
 
+                print("player_cards are: ", player_cards, player_card_deck_instance)
+
                 #get second player card
                 deal_cards(card_deck, player_cards, player_card_deck_instance)
 
@@ -123,15 +125,20 @@ def main():
             #play-game value could have been set to false above eg. if dealer hit blackjack or busted. 
             if play_game == True:
                 #check player value vs. dealer value
-                for deck in player_cards:
-                    if sum(deck) > dealer_card_sum:
+                for deck in range(len(player_cards)):
+                    temp_val, player_card_sum, temp_val_two = check_bust(player_cards, deck, player_bet)
+                    print("dealer_card_sum: ", dealer_card_sum, " type: ", type(dealer_card_sum))
+                    print("deck: ", deck)
+                    if player_card_sum > dealer_card_sum:
                     #if player value > dealer value -> player wins
                         player_bet *= 1.5
                         print ("BLACKJACK!!!!!!!!!!!!!!!!!!! \n you win ", player_bet, "!!!!")
+                        play_game = False
                 
                 #else dealer wins
-                print ("DEALER WON BLACKJACK, YOU LOSE :(")
-                play_game = False
+                if play_game is True:
+                    print ("DEALER WON BLACKJACK, YOU LOSE :(")
+                    play_game = False
 
 
 def split_cards(player_cards):
@@ -139,11 +146,16 @@ def split_cards(player_cards):
     player_cards[1].append(player_cards[0].pop(0))
 
 def deal_cards(card_deck, player_cards, player_card_deck_instance):
-    player_card = random.randint(0, len(card_deck))
-    if player_card_deck_instance == len(player_cards): 
-        player_cards.append([])
-    player_cards[player_card_deck_instance].append(card_deck[player_card])
-    del card_deck[player_card]
+    try:
+        player_card = random.randint(0, len(card_deck))
+        if player_card_deck_instance == len(player_cards): 
+            player_cards.append([])
+        player_cards[player_card_deck_instance].append(card_deck[player_card])
+        del card_deck[player_card]
+    except IndexError:
+        print ("player_cards: ", player_cards)
+        print ("len(player_cards): ", len(player_cards))
+        print ("player_card_deck_instance: ", player_card_deck_instance)
 
 
 def check_bust(player_cards, player_card_deck_instance, player_bet):
@@ -169,10 +181,10 @@ def check_bust(player_cards, player_card_deck_instance, player_bet):
             curr_sum += int(card)
     
     if curr_sum == 21: 
-        player_bet *= 1.5
         if player_bet == -1: #dealer bet
             print ("DEALER WON BLACKJACK, YOU LOSE :(")
         else: 
+            player_bet *= 1.5
             print ("BLACKJACK!!!!!!!!!!!!!!!!!!! \n you win ", player_bet, "!!!!")
         return False, curr_sum, player_card_deck_instance
 
